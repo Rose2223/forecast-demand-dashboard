@@ -1,0 +1,29 @@
+name: Dashboard CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-check:
+    name: Static lint and panel checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check all source files exist
+        run: test -f index.html && test -f styles.css && test -f data.js && test -f app.js
+      - name: Check Chart.js CDN reference
+        run: grep -q 'chart.js' index.html
+      - name: Check all 7 view panels present
+        run: |
+          for v in v1 v2 v3 v4 v5 v6 v7; do
+            grep -q "id=\"$v\"" index.html || (echo "Missing panel: $v" && exit 1)
+          done
+      - name: Check theme toggle present
+        run: grep -q 'themeToggle' index.html
+      - name: Check Inter font loaded
+        run: grep -q 'Inter' styles.css
+      - name: Check MCP_DATA object present
+        run: grep -q 'MCP_DATA' data.js

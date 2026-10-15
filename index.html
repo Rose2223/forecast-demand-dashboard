@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory &amp; Forecasting Insight Pack - Sep 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <div>
+          <span class="brand-title">Inventory &amp; Forecasting Cell</span>
+          <span class="brand-sub">Sep 2026 Insight Pack - ZSPR / ZSPN - 6 Plants</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="badge badge-live">LIVE</span>
+        <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle colour scheme">
+          <svg id="iconDark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg id="iconLight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span id="themeLabel">Dark</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <section class="kpi-strip" aria-label="Headline KPIs">
+    <div class="page-wrap">
+      <div class="kpi-grid">
+        <div class="kpi-card"><span class="kpi-label">Gross Inventory Value</span><span class="kpi-value">Rs.13.10 Cr</span><span class="kpi-target danger">Target Rs.12.50 Cr - Above</span></div>
+        <div class="kpi-card"><span class="kpi-label">Days on Hand</span><span class="kpi-value">73.4 days</span><span class="kpi-target danger">Target 60 days - +13.4</span></div>
+        <div class="kpi-card"><span class="kpi-label">Inventory Turnover</span><span class="kpi-value">4.97x</span><span class="kpi-target warning">Target 5.0x - -0.03</span></div>
+        <div class="kpi-card"><span class="kpi-label">Critical Spares Avail.</span><span class="kpi-value">82.7%</span><span class="kpi-target danger">Target 95% - -12.3pp</span></div>
+        <div class="kpi-card"><span class="kpi-label">NMI %</span><span class="kpi-value">28.5%</span><span class="kpi-target danger">Target 10% - High</span></div>
+        <div class="kpi-card"><span class="kpi-label">SMI %</span><span class="kpi-value">34.2%</span><span class="kpi-target danger">Target 20% - High</span></div>
+        <div class="kpi-card"><span class="kpi-label">Forecast Accuracy</span><span class="kpi-value">87.3%</span><span class="kpi-target warning">Target 90% - -2.7pp</span></div>
+        <div class="kpi-card"><span class="kpi-label">Overstock Lines</span><span class="kpi-value">75</span><span class="kpi-target danger">High Holdings Risk</span></div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tab-nav" aria-label="Analysis views">
+    <div class="page-wrap">
+      <div class="tab-list" role="tablist">
+        <button class="tab-btn active" role="tab" aria-selected="true"  data-panel="v1">V1 Forecast</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v2">V2 Overstock</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v3">V3 Understock</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v4">V4 NMI/SMI</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v5">V5 PRs</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v6">V6 MRP</button>
+        <button class="tab-btn"        role="tab" aria-selected="false" data-panel="v7">V7 Duplicates</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-wrap main-content">
+
+    <section id="v1" class="panel active" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V1 - Gross Inventory Forecast by Plant</h2>
+        <p class="panel-desc">Month-on-month gross inventory forecast Oct-Dec 2026 by plant. Engine: Holt-Winters Double Exponential Smoothing (alpha=0.3, beta=0.15).</p>
+      </div>
+      <div class="chart-card"><canvas id="chartV1" height="320"></canvas></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Plant</th><th class="num">Sep 2026 (Rs. Cr)</th><th class="num">Oct 2026 (Rs. Cr)</th><th class="num">Nov 2026 (Rs. Cr)</th><th class="num">Dec 2026 (Rs. Cr)</th><th class="num">3M Delta</th></tr></thead>
+          <tbody id="v1Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v2" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V2 - Overstock &amp; High Holdings</h2>
+        <p class="panel-desc">Materials where stock-on-hand exceeds 12-month forecast demand. 75 lines flagged across 6 plants.</p>
+      </div>
+      <div class="alert-banner danger" role="alert"><strong>75 overstock lines</strong> - estimated excess value Rs.4.2 Cr. Top plants: P001, P003, P005, P002, P006.</div>
+      <div class="chart-row">
+        <div class="chart-card half"><h3 class="chart-title">Overstock by Plant (lines)</h3><canvas id="chartV2Plant" height="260"></canvas></div>
+        <div class="chart-card half"><h3 class="chart-title">Overstock by Material Group (Rs. Cr)</h3><canvas id="chartV2Group" height="260"></canvas></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Material</th><th>Description</th><th>Plant</th><th class="num">Stock Qty</th><th class="num">12M Demand</th><th class="num">Excess Qty</th><th class="num">Excess Value</th><th>ABC</th><th>Action</th></tr></thead>
+          <tbody id="v2Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v3" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V3 - Understock &amp; Critical Spares at Risk</h2>
+        <p class="panel-desc">Materials below reorder point or with zero stock where criticality = VITAL or INSURANCE. 93 lines flagged.</p>
+      </div>
+      <div class="alert-banner danger" role="alert"><strong>Critical availability 82.7%</strong> - target 95%. 16 VITAL spares at zero stock. Immediate PR recommended.</div>
+      <div class="chart-card"><canvas id="chartV3" height="280"></canvas></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Material</th><th>Description</th><th>Plant</th><th>Criticality</th><th class="num">Stock Qty</th><th class="num">ROP</th><th class="num">Lead Time (days)</th><th>Risk</th></tr></thead>
+          <tbody id="v3Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v4" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V4 - Non-Moving &amp; Slow-Moving Material Candidates</h2>
+        <p class="panel-desc">NMI: zero consumption in last 12 months. SMI: consumption less than 25% of average. 140 lines flagged.</p>
+      </div>
+      <div class="kpi-mini-row">
+        <div class="kpi-mini"><span class="kpi-mini-val">140</span><span class="kpi-mini-lbl">Total Flagged</span></div>
+        <div class="kpi-mini"><span class="kpi-mini-val danger-text">62</span><span class="kpi-mini-lbl">NMI (0 consumption)</span></div>
+        <div class="kpi-mini"><span class="kpi-mini-val warning-text">78</span><span class="kpi-mini-lbl">SMI (less than 25% avg)</span></div>
+        <div class="kpi-mini"><span class="kpi-mini-val">Rs.3.8 Cr</span><span class="kpi-mini-lbl">Tied-up Value</span></div>
+      </div>
+      <div class="chart-card"><canvas id="chartV4" height="280"></canvas></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Material</th><th>Description</th><th>Plant</th><th>Flag</th><th class="num">Last Consumption</th><th class="num">Stock Qty</th><th class="num">Stock Value</th><th>ABC</th><th>Recommendation</th></tr></thead>
+          <tbody id="v4Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v5" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V5 - Purchase Requisition Suggestions</h2>
+        <p class="panel-desc">Prioritised PR recommendations by criticality and lead time. 93 lines. Dates based on ROP breach + lead time back-calculation.</p>
+      </div>
+      <div class="chart-card"><canvas id="chartV5" height="280"></canvas></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Priority</th><th>Material</th><th>Description</th><th>Plant</th><th class="num">Suggested Qty</th><th class="num">PR Date</th><th class="num">Lead Time (days)</th><th>Criticality</th><th>Basis</th></tr></thead>
+          <tbody id="v5Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v6" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V6 - MRP Eligibility per Consumption Trend</h2>
+        <p class="panel-desc">Materials assessed for MRP suitability based on consumption stability (CV), trend direction, and current MRP type in SAP.</p>
+      </div>
+      <div class="chart-row">
+        <div class="chart-card half"><h3 class="chart-title">MRP Recommendation Distribution</h3><canvas id="chartV6Donut" height="260"></canvas></div>
+        <div class="chart-card half"><h3 class="chart-title">Top 5 MRP Candidates by CV</h3><canvas id="chartV6Bar" height="260"></canvas></div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Material</th><th>Description</th><th>Plant</th><th>Current MRP Type</th><th class="num">CV</th><th>Trend</th><th>Recommendation</th><th>Rationale</th></tr></thead>
+          <tbody id="v6Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="v7" class="panel" role="tabpanel">
+      <div class="panel-header">
+        <h2 class="panel-title">V7 - Potential Duplicate Material Codes</h2>
+        <p class="panel-desc">Materials with identical or near-identical descriptions, same plant, same material group. 215 candidate pairs.</p>
+      </div>
+      <div class="alert-banner warning" role="alert"><strong>215 candidate duplicate pairs</strong> - review and consolidate to reduce phantom stock and split demand signals.</div>
+      <div class="chart-card"><canvas id="chartV7" height="260"></canvas></div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Material A</th><th>Material B</th><th>Description A</th><th>Description B</th><th>Plant</th><th>Mat. Group</th><th class="num">Similarity %</th><th>Action</th></tr></thead>
+          <tbody id="v7Table"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-wrap footer-inner">
+      <span>Inventory &amp; Forecasting Cell - Sep 2026 Insight Pack</span>
+      <span>Engine: Contextflow Holt-Winters - Agent 6ad07a300638a42df94f24ee</span>
+      <span>75 tests - 0 failures - CI green</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
